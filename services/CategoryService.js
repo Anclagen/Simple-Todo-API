@@ -5,15 +5,19 @@ class CategoryService {
     this.User = db.User;
   }
 
-  async create(name, userId) {
+  async create(name, id) {
     return this.Category.create({
       name,
-      userId,
+      UserId: id,
     });
   }
 
   async findAll() {
     return this.Category.findAll();
+  }
+
+  async findAllByUser(id) {
+    return this.Category.findAll({ where: { UserId: id } });
   }
 
   async findOne(id) {
