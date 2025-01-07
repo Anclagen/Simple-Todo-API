@@ -1,4 +1,7 @@
 var jwt = require("jsonwebtoken");
+var db = require("../models");
+var CategoryService = require("../services/CategoryService");
+var categoryService = new CategoryService(db);
 
 // Middleware function to determine if the API endpoint request is from an authenticated user
 function isAuth(req, res, next) {
@@ -31,4 +34,27 @@ function isAuth(req, res, next) {
     return res.status(statusCode).jsend.error({ message });
   }
 }
-module.exports = isAuth;
+
+async function isCategoryOwner(req, res, next) {
+  try {
+    // Check if the category exists
+    const category = await categoryService.findOne(req.params.id);
+    if (!category) {
+      return res.status(404).jsend.fail({ statusCode: 404, result: "Category not found" });
+    }
+
+    // Check if the user is the owner of the category
+    if (category.UserId !== req.user.id) {
+      return res.status(403).jsend.fail({ statusCode: 403, result: "You are not authorized to update this category" });
+    }
+
+    next();
+  } catch (error) {
+    return res.status(500).jsend.error({ status: "error", message: "Internal server error", data: error });
+  }
+}
+
+module.exports = {
+  isAuth,
+  isCategoryOwner,
+};
