@@ -4,9 +4,15 @@ class UserService {
     this.User = db.User;
   }
 
-  async getOne(email) {
+  async getOneEmail(email) {
     return this.User.findOne({
       where: { email },
+    });
+  }
+
+  async getOneId(id) {
+    return this.User.findOne({
+      where: { id },
     });
   }
 
