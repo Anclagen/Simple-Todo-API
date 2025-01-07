@@ -5,8 +5,6 @@ var db = require("../models");
 var UserService = require("../services/UserService");
 var userService = new UserService(db);
 var crypto = require("crypto");
-var jsend = require("jsend");
-router.use(jsend.middleware);
 
 // Post for registered users to be able to login
 router.post("/login", async (req, res, next) => {
@@ -28,7 +26,7 @@ router.post("/login", async (req, res, next) => {
       }
 
       if (!crypto.timingSafeEqual(user.encryptedPassword, hashedPassword)) {
-        return res.jsend.fail({ statusCode: 400, result: "Incorrect email or password" });
+        return res.status(400).jsend.fail({ statusCode: 400, result: "Incorrect email or password" });
       }
 
       const token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET, {

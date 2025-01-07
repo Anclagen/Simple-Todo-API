@@ -3,9 +3,12 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+var jsend = require("jsend");
 
 var usersRouter = require("./routes/users");
-require("dotenv").config();
+var categoriesRouter = require("./routes/categories");
+var todosRouter = require("./routes/todos");
+
 var db = require("./models");
 
 // Check if the statuses are already in the database, if not, create them
@@ -39,7 +42,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+// Globally add jsend to the response object
+app.use(jsend.middleware);
 app.use("/users", usersRouter);
+app.use("/category", categoriesRouter);
+app.use("/todos", todosRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
