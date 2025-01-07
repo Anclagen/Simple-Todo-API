@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node --env-file=./.env ./bin/www",
-    "dev": "node --watch --env-file=./.env ./bin/www"
+    "swagger": "node --env-file=./.env swagger",
+    "start": "node --env-file=./.env swagger && node --env-file=./.env ./bin/www",
+    "dev": "node --env-file=./.env swagger && node --watch --env-file=./.env ./bin/www"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -18,6 +19,8 @@
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
     "mysql2": "^3.1.2",
-    "sequelize": "^6.29.0"
+    "sequelize": "^6.29.0",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.1"
   }
 }

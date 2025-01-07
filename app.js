@@ -5,6 +5,9 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var jsend = require("jsend");
 
+const swaggerUi = require("swagger-ui-express");
+const swaggerFile = require("./swagger-output.json");
+
 var usersRouter = require("./routes/users");
 var categoriesRouter = require("./routes/categories");
 var todosRouter = require("./routes/todos");
@@ -26,7 +29,8 @@ const createStatuses = async () => {
   }
 };
 
-db.sequelize.sync({ force: true }).then(async () => {
+// TODO: Change back to force true?
+db.sequelize.sync({ force: false }).then(async () => {
   createStatuses();
 });
 
@@ -47,6 +51,8 @@ app.use(jsend.middleware);
 app.use("/users", usersRouter);
 app.use("/category", categoriesRouter);
 app.use("/todos", todosRouter);
+
+app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
