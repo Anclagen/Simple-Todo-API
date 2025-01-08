@@ -59,7 +59,10 @@ router.put("/:id", isAuth, isCategoryOwner, async (req, res) => {
   #swagger.security = [{
       "bearerAuth": []
    }]
-   */
+  #swagger.responses[200] = {description: 'Category updated', schema: {status: "success", data: {statusCode: 200, result: "Category updated"}}}
+  #swagger.responses[400] = {description: 'Missing name in request body', schema: {status: "fail", data: {statusCode: 400, result: "Missing name in request body"}}}
+  #swagger.responses[404] = {description: 'Category not found', schema: {status: "fail", data: {statusCode: 404, result: "Category not found"}}}
+  */
   try {
     const { name } = req.body;
     if (!name) {
@@ -88,7 +91,6 @@ router.delete("/:id", isAuth, isCategoryOwner, async (req, res) => {
     }]
   #swagger.responses[200] = {description: 'Category deleted', schema: {status: "success", data: {statusCode: 200, result: "Category deleted"}}}
   #swagger.responses[404] = {description: 'Category not found', schema: {status: "fail", data: {statusCode: 404, result: "Category not found"}}}
-  #swagger.responses[500] = {description: 'Internal server error', schema: {status: "error", data: {}}}
   */
   try {
     const result = await categoryService.delete(req.params.id);

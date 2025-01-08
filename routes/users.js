@@ -16,7 +16,7 @@ router.post("/login", async (req, res, next) => {
   #swagger.produces = ["application/json"] 
   #swagger.responses[200] = {description: 'You are logged in', schema: {status: "success", data: {statusCode: 200, result: "You are logged in", token: "token"}}}
   #swagger.responses[400] = {description: 'Incorrect email or password', schema: {status: "fail", data: {statusCode: 400, result: "Incorrect email or password"}}}
-  #swagger.responses[500] = {description: 'Internal server error', schema: {status: "error", data: {}}}
+  #swagger.responses[500] = {description: 'Internal server error', schema: {status: "error", message: "Internal server error", data: {}}}
   */
   try {
     const { email, password } = req.body;
@@ -46,7 +46,7 @@ router.post("/login", async (req, res, next) => {
       res.status(200).jsend.success({ statusCode: 200, result: "You are logged in", token });
     });
   } catch (error) {
-    return res.status(500).jsend.error({ status: "error", result: error });
+    return res.status(500).jsend.error({ status: "error", message: "Internal server error", data: error });
   }
 });
 
@@ -60,7 +60,7 @@ router.post("/signup", async (req, res, next) => {
   #swagger.responses[200] = {description: 'You created an account', schema: {status: "success", data: {statusCode: 200, result: "You created an account"}}}
   #swagger.responses[400] = {description: 'Missing name, email or password in request body', schema: {status: "fail", data: {statusCode: 400, result: "Missing name, email or password in request body"}}}
   #swagger.responses[400] = {description: 'Email already exists', schema: {status: "fail", data: {statusCode: 400, result: "Email already exists"}}}
-  #swagger.responses[500] = {description: 'Internal server error', schema: {status: "error", data: {}}}
+  #swagger.responses[500] = {description: 'Internal server error', schema: {status: "error", message: "Internal server error", data: {}}}
   */
 
   try {
@@ -87,7 +87,7 @@ router.post("/signup", async (req, res, next) => {
       res.jsend.success({ statusCode: 200, result: "You created an account." });
     });
   } catch (error) {
-    return res.status(500).jsend.error({ status: "error", result: error });
+    return res.status(500).jsend.error({ status: "error", message: "Internal server error", data: error });
   }
 });
 
