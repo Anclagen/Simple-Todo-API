@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 class TodoService {
   constructor(db) {
     this.client = db.sequelize;
@@ -6,12 +7,13 @@ class TodoService {
     this.Status = db.Status;
   }
 
-  async create(name, email, encryptedPassword, salt) {
+  async create(name, description, StatusId, CategoryId, UserId) {
     return this.Todo.create({
       name,
-      email,
-      encryptedPassword,
-      salt,
+      description,
+      StatusId,
+      CategoryId,
+      UserId,
     });
   }
 
@@ -23,13 +25,32 @@ class TodoService {
     return this.Todo.findByPk(id);
   }
 
+  async findAllByUser(id, deleted = false) {
+    const statusCondition = deleted ? {} : { status: { [Op.ne]: "Deleted" } };
+    return this.Todo.findAll({
+      where: { UserId: id },
+      include: [{ model: this.Category }, { model: this.Status, where: statusCondition }],
+    });
+  }
+
+  async findAllDeletedByUser(id) {
+    return this.Todo.findAll({
+      where: { UserId: id },
+      include: [{ model: this.Category }, { model: this.Status, where: { status: "Deleted" } }],
+    });
+  }
+
   async findAllByCategory(id) {
     return this.Todo.findAll({ where: { CategoryId: id } });
   }
 
-  async update(id, name) {
+  async findAllStatuses() {
+    return this.Status.findAll();
+  }
+
+  async update(id, args) {
     return this.Todo.update(
-      { name },
+      { ...args },
       {
         where: { id },
       }
