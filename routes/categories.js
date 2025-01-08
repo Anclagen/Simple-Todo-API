@@ -3,6 +3,8 @@ var router = express.Router();
 var db = require("../models");
 var CategoryService = require("../services/CategoryService");
 var categoryService = new CategoryService(db);
+var TodoService = require("../services/TodoService");
+var todoService = new TodoService(db);
 const { isAuth, isCategoryOwner } = require("../middleware/middleware");
 
 router.get("/", isAuth, async (req, res) => {
@@ -93,6 +95,12 @@ router.delete("/:id", isAuth, isCategoryOwner, async (req, res) => {
   #swagger.responses[404] = {description: 'Category not found', schema: {status: "fail", data: {statusCode: 404, result: "Category not found"}}}
   */
   try {
+    // Check if there are any todos with the category
+    const todos = await todoService.findAllByCategory(req.params.id);
+    if (todos.length > 0) {
+      return res.status(400).jsend.fail({ statusCode: 400, result: "Category has todos" });
+    }
+
     const result = await categoryService.delete(req.params.id);
     if (!result) {
       return res.status(404).jsend.fail({ statusCode: 404, result: "Category not found" });
