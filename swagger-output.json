@@ -13,7 +13,16 @@
   "paths": {
     "/users/login": {
       "post": {
-        "description": "",
+        "tags": [
+          "Auth"
+        ],
+        "description": "Endpoint to login a user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "name": "body",
@@ -28,22 +37,113 @@
                   "example": "any"
                 }
               }
+            },
+            "description": "User email and password",
+            "properties": {
+              "email": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              }
             }
           }
         ],
         "responses": {
+          "200": {
+            "description": "You are logged in",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "success"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "You are logged in"
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "token"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
           "400": {
-            "description": "Bad Request"
+            "description": "Incorrect email or password",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Incorrect email or password"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {}
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/users/signup": {
       "post": {
-        "description": "",
+        "tags": [
+          "Auth"
+        ],
+        "description": "Endpoint to create a new user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "name": "body",
@@ -61,15 +161,96 @@
                   "example": "any"
                 }
               }
+            },
+            "description": "User name, email and password",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              }
             }
           }
         ],
         "responses": {
+          "200": {
+            "description": "You created an account",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "success"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "You created an account"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
           "400": {
-            "description": "Bad Request"
+            "description": "Email already exists",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Email already exists"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {}
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -86,7 +267,13 @@
     },
     "/category/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Categories"
+        ],
+        "description": "Endpoint to get all categories for the logged in user",
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "name": "authorization",
@@ -96,18 +283,114 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Categories found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "success"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "result": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "number",
+                            "example": 2
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "Category Name"
+                          },
+                          "UserId": {
+                            "type": "number",
+                            "example": 1
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Verification failed",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 401
+                },
+                "result": {
+                  "type": "string",
+                  "example": "Unauthorized, malformed authorization header"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "example": {
+              "example1": {
+                "statusCode": 401,
+                "result": "Expired or invalid token"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "status": "error",
+            "message": "Internal server error",
+            "data": {}
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Categories"
+        ],
+        "description": "Endpoint to create a new category for the logged in user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "name": "authorization",
@@ -123,6 +406,12 @@
                 "name": {
                   "example": "any"
                 }
+              }
+            },
+            "description": "Category name",
+            "properties": {
+              "name": {
+                "type": "string"
               }
             }
           }
@@ -135,23 +424,76 @@
             "description": "Bad Request"
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Verification failed",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 401
+                },
+                "result": {
+                  "type": "string",
+                  "example": "Unauthorized, malformed authorization header"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "example": {
+              "example1": {
+                "statusCode": 401,
+                "result": "Expired or invalid token"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/category/{id}": {
       "put": {
-        "description": "",
+        "tags": [
+          "Categories"
+        ],
+        "description": "Endpoint to update a category for the logged in user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "description": "Category id"
           },
           {
             "name": "authorization",
@@ -168,6 +510,12 @@
                   "example": "any"
                 }
               }
+            },
+            "description": "Category name",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
             }
           }
         ],
@@ -179,27 +527,109 @@
             "description": "Bad Request"
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Verification failed",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 401
+                },
+                "result": {
+                  "type": "string",
+                  "example": "Unauthorized, malformed authorization header"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "example": {
+              "example1": {
+                "statusCode": 401,
+                "result": "Expired or invalid token"
+              }
+            }
           },
           "403": {
-            "description": "Forbidden"
+            "description": "You are not authorized to update this category",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 403
+                },
+                "result": {
+                  "type": "string",
+                  "example": "You are not authorized to update this category"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Category not found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 404
+                },
+                "result": {
+                  "type": "string",
+                  "example": "Category not found"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Categories"
+        ],
+        "description": "Endpoint to delete a category for the logged in user",
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "description": "Category id"
           },
           {
             "name": "authorization",
@@ -209,21 +639,130 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Category deleted",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "success"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Category deleted"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Verification failed",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 401
+                },
+                "result": {
+                  "type": "string",
+                  "example": "Unauthorized, malformed authorization header"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "example": {
+              "example1": {
+                "statusCode": 401,
+                "result": "Expired or invalid token"
+              }
+            }
           },
           "403": {
-            "description": "Forbidden"
+            "description": "You are not authorized to update this category",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 403
+                },
+                "result": {
+                  "type": "string",
+                  "example": "You are not authorized to update this category"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Category not found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Category not found"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {}
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/todos/": {
@@ -238,7 +777,48 @@
         ],
         "responses": {
           "401": {
-            "description": "Unauthorized"
+            "description": "Verification failed",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 401
+                },
+                "result": {
+                  "type": "string",
+                  "example": "Unauthorized, malformed authorization header"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "example": {
+              "example1": {
+                "statusCode": 401,
+                "result": "Expired or invalid token"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
@@ -253,7 +833,48 @@
         ],
         "responses": {
           "401": {
-            "description": "Unauthorized"
+            "description": "Verification failed",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 401
+                },
+                "result": {
+                  "type": "string",
+                  "example": "Unauthorized, malformed authorization header"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "example": {
+              "example1": {
+                "statusCode": 401,
+                "result": "Expired or invalid token"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -270,7 +891,48 @@
         ],
         "responses": {
           "401": {
-            "description": "Unauthorized"
+            "description": "Verification failed",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 401
+                },
+                "result": {
+                  "type": "string",
+                  "example": "Unauthorized, malformed authorization header"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "example": {
+              "example1": {
+                "statusCode": 401,
+                "result": "Expired or invalid token"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -287,7 +949,48 @@
         ],
         "responses": {
           "401": {
-            "description": "Unauthorized"
+            "description": "Verification failed",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 401
+                },
+                "result": {
+                  "type": "string",
+                  "example": "Unauthorized, malformed authorization header"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "example": {
+              "example1": {
+                "statusCode": 401,
+                "result": "Expired or invalid token"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -304,7 +1007,48 @@
         ],
         "responses": {
           "401": {
-            "description": "Unauthorized"
+            "description": "Verification failed",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 401
+                },
+                "result": {
+                  "type": "string",
+                  "example": "Unauthorized, malformed authorization header"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "example": {
+              "example1": {
+                "statusCode": 401,
+                "result": "Expired or invalid token"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -327,7 +1071,48 @@
         ],
         "responses": {
           "401": {
-            "description": "Unauthorized"
+            "description": "Verification failed",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 401
+                },
+                "result": {
+                  "type": "string",
+                  "example": "Unauthorized, malformed authorization header"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "example": {
+              "example1": {
+                "statusCode": 401,
+                "result": "Expired or invalid token"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
@@ -348,8 +1133,68 @@
         ],
         "responses": {
           "401": {
-            "description": "Unauthorized"
+            "description": "Verification failed",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 401
+                },
+                "result": {
+                  "type": "string",
+                  "example": "Unauthorized, malformed authorization header"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "example": {
+              "example1": {
+                "statusCode": 401,
+                "result": "Expired or invalid token"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Category": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "example": "Category Name"
+        },
+        "UserId": {
+          "type": "number",
+          "example": 1
         }
       }
     }

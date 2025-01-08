@@ -6,15 +6,35 @@ var categoryService = new CategoryService(db);
 const { isAuth, isCategoryOwner } = require("../middleware/middleware");
 
 router.get("/", isAuth, async (req, res) => {
+  /**
+  #swagger.tags = ['Categories']
+  #swagger.description = 'Endpoint to get all categories for the logged in user'
+  #swagger.produces = ["application/json"]
+  #swagger.security = [{
+      "bearerAuth": []
+   }]
+   */
   try {
     const result = await categoryService.findAllByUser(req.user.id);
+    // #swagger.responses[200] = {description: 'Categories found', schema: {status: "success", data: {statusCode: 200, result: [{id: 1, name: "Category Name", UserId: 1}, {id: 2, name: "Category Name", UserId: 1}]}}}
     return res.status(200).jsend.success({ statusCode: 200, result });
   } catch (error) {
+    // #swagger.responses[500] = {status: "error", message: "Internal server error", data: {}}
     return res.status(500).jsend.error({ status: "error", message: "Internal server error", data: error });
   }
 });
 
 router.post("/", isAuth, async (req, res) => {
+  /**
+  #swagger.tags = ['Categories']
+  #swagger.description = 'Endpoint to create a new category for the logged in user'
+  #swagger.parameters['body'] = { in: 'body', description: 'Category name', type: 'object', properties: {name: { type: 'string' }} }
+  #swagger.consumes = ["application/json"]
+  #swagger.produces = ["application/json"]
+  #swagger.security = [{
+      "bearerAuth": []
+   }]
+   */
   try {
     const { name } = req.body;
     const userId = req.user.id;
@@ -29,6 +49,17 @@ router.post("/", isAuth, async (req, res) => {
 });
 
 router.put("/:id", isAuth, isCategoryOwner, async (req, res) => {
+  /**
+  #swagger.tags = ['Categories']
+  #swagger.description = 'Endpoint to update a category for the logged in user'
+  #swagger.parameters['id'] = { description: 'Category id', type: 'integer' }
+  #swagger.parameters['body'] = { in: 'body', description: 'Category name', type: 'object', properties: {name: { type: 'string' }} }
+  #swagger.consumes = ["application/json"]
+  #swagger.produces = ["application/json"]
+  #swagger.security = [{
+      "bearerAuth": []
+   }]
+   */
   try {
     const { name } = req.body;
     if (!name) {
@@ -47,6 +78,18 @@ router.put("/:id", isAuth, isCategoryOwner, async (req, res) => {
 });
 
 router.delete("/:id", isAuth, isCategoryOwner, async (req, res) => {
+  /**
+  #swagger.tags = ['Categories']
+  #swagger.description = 'Endpoint to delete a category for the logged in user'
+  #swagger.parameters['id'] = { description: 'Category id', type: 'integer' }
+  #swagger.produces = ["application/json"]
+  #swagger.security = [{
+      "bearerAuth": []
+    }]
+  #swagger.responses[200] = {description: 'Category deleted', schema: {status: "success", data: {statusCode: 200, result: "Category deleted"}}}
+  #swagger.responses[404] = {description: 'Category not found', schema: {status: "fail", data: {statusCode: 404, result: "Category not found"}}}
+  #swagger.responses[500] = {description: 'Internal server error', schema: {status: "error", data: {}}}
+  */
   try {
     const result = await categoryService.delete(req.params.id);
     if (!result) {

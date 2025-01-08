@@ -8,6 +8,7 @@ function isAuth(req, res, next) {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      // #swagger.responses[401] = {description: 'Unauthorized, malformed authorization header', schema: {statusCode: 401, result: "Unauthorized, malformed authorization header"}}
       return res.status(401).jsend.fail({
         data: { statusCode: 401, result: "Unauthorized, malformed authorization header" },
       });
@@ -27,10 +28,11 @@ function isAuth(req, res, next) {
 
     // If the error is a JsonWebTokenError, return a 401 status code
     if (statusCode === 401) {
+      // #swagger.responses[401] = {description: 'Verification failed', example:{ example1: {statusCode: 401, result: "Expired or invalid token"}}}
       return res.status(statusCode).jsend.fail({ statusCode, result: message });
     }
 
-    // Unexpected errors return a 500 status code
+    // #swagger.responses[500] = {description: 'Internal server error', schema: {statusCode: 500, message: "Internal server error"}}
     return res.status(statusCode).jsend.error({ message });
   }
 }
@@ -40,16 +42,19 @@ async function isCategoryOwner(req, res, next) {
     // Check if the category exists
     const category = await categoryService.findOne(req.params.id);
     if (!category) {
+      // #swagger.responses[404] = {description: 'Category not found', schema: {statusCode: 404, result: "Category not found"}}
       return res.status(404).jsend.fail({ statusCode: 404, result: "Category not found" });
     }
 
     // Check if the user is the owner of the category
     if (category.UserId !== req.user.id) {
+      // #swagger.responses[403] = {description: 'You are not authorized to update this category', schema: {statusCode: 403, result: "You are not authorized to update this category"}}
       return res.status(403).jsend.fail({ statusCode: 403, result: "You are not authorized to update this category" });
     }
 
     next();
   } catch (error) {
+    // #swagger.responses[500] = {description: 'Internal server error', schema: {statusCode: 500, message: "Internal server error"}}
     return res.status(500).jsend.error({ status: "error", message: "Internal server error", data: error });
   }
 }

@@ -1,3 +1,5 @@
+const Category = require("./models/Category");
+
 const swaggerAutogen = require("swagger-autogen")();
 const doc = {
   info: {
@@ -6,7 +8,13 @@ const doc = {
     description: "A simple TODO app with user authentication and categories",
   },
   host: "localhost:3000",
-  definitions: {},
+  definitions: {
+    Category: {
+      id: 1,
+      name: "Category Name",
+      UserId: 1,
+    },
+  },
 };
 
 const outputFile = "./swagger-output.json";
