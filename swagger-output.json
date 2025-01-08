@@ -335,7 +335,7 @@
             }
           },
           "401": {
-            "description": "Verification failed",
+            "description": "Unauthorized, malformed authorization header",
             "schema": {
               "type": "object",
               "properties": {
@@ -352,7 +352,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Verification failed"
+                      "example": "Unauthorized, malformed authorization header"
                     }
                   }
                 }
@@ -439,7 +439,7 @@
             "description": "Bad Request"
           },
           "401": {
-            "description": "Verification failed",
+            "description": "Unauthorized, malformed authorization header",
             "schema": {
               "type": "object",
               "properties": {
@@ -456,7 +456,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Verification failed"
+                      "example": "Unauthorized, malformed authorization header"
                     }
                   }
                 }
@@ -599,7 +599,7 @@
             }
           },
           "401": {
-            "description": "Verification failed",
+            "description": "Unauthorized, malformed authorization header",
             "schema": {
               "type": "object",
               "properties": {
@@ -616,7 +616,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Verification failed"
+                      "example": "Unauthorized, malformed authorization header"
                     }
                   }
                 }
@@ -763,8 +763,36 @@
               }
             }
           },
+          "400": {
+            "description": "Category has todos",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Category has todos"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
           "401": {
-            "description": "Verification failed",
+            "description": "Unauthorized, malformed authorization header",
             "schema": {
               "type": "object",
               "properties": {
@@ -781,7 +809,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Verification failed"
+                      "example": "Unauthorized, malformed authorization header"
                     }
                   }
                 }
@@ -890,7 +918,7 @@
         ],
         "responses": {
           "401": {
-            "description": "Verification failed",
+            "description": "Unauthorized, malformed authorization header",
             "schema": {
               "type": "object",
               "properties": {
@@ -907,7 +935,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Verification failed"
+                      "example": "Unauthorized, malformed authorization header"
                     }
                   }
                 }
@@ -953,7 +981,7 @@
         ],
         "responses": {
           "401": {
-            "description": "Verification failed",
+            "description": "Unauthorized, malformed authorization header",
             "schema": {
               "type": "object",
               "properties": {
@@ -970,7 +998,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Verification failed"
+                      "example": "Unauthorized, malformed authorization header"
                     }
                   }
                 }
@@ -1018,7 +1046,7 @@
         ],
         "responses": {
           "401": {
-            "description": "Verification failed",
+            "description": "Unauthorized, malformed authorization header",
             "schema": {
               "type": "object",
               "properties": {
@@ -1035,7 +1063,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Verification failed"
+                      "example": "Unauthorized, malformed authorization header"
                     }
                   }
                 }
@@ -1083,7 +1111,7 @@
         ],
         "responses": {
           "401": {
-            "description": "Verification failed",
+            "description": "Unauthorized, malformed authorization header",
             "schema": {
               "type": "object",
               "properties": {
@@ -1100,7 +1128,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Verification failed"
+                      "example": "Unauthorized, malformed authorization header"
                     }
                   }
                 }
@@ -1148,7 +1176,7 @@
         ],
         "responses": {
           "401": {
-            "description": "Verification failed",
+            "description": "Unauthorized, malformed authorization header",
             "schema": {
               "type": "object",
               "properties": {
@@ -1165,7 +1193,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Verification failed"
+                      "example": "Unauthorized, malformed authorization header"
                     }
                   }
                 }
@@ -1219,7 +1247,7 @@
         ],
         "responses": {
           "401": {
-            "description": "Verification failed",
+            "description": "Unauthorized, malformed authorization header",
             "schema": {
               "type": "object",
               "properties": {
@@ -1236,7 +1264,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Verification failed"
+                      "example": "Unauthorized, malformed authorization header"
                     }
                   }
                 }
@@ -1288,7 +1316,7 @@
         ],
         "responses": {
           "401": {
-            "description": "Verification failed",
+            "description": "Unauthorized, malformed authorization header",
             "schema": {
               "type": "object",
               "properties": {
@@ -1305,7 +1333,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Verification failed"
+                      "example": "Unauthorized, malformed authorization header"
                     }
                   }
                 }

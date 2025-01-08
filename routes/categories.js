@@ -75,7 +75,6 @@ router.put("/:id", isAuth, isCategoryOwner, async (req, res) => {
     if (!result) {
       return res.status(404).jsend.fail({ statusCode: 404, result: "Category not found" });
     }
-
     return res.status(200).jsend.success({ statusCode: 200, result: "Category updated" });
   } catch (error) {
     return res.status(500).jsend.error({ status: "error", message: "Internal server error", data: error });
@@ -92,6 +91,7 @@ router.delete("/:id", isAuth, isCategoryOwner, async (req, res) => {
       "bearerAuth": []
     }]
   #swagger.responses[200] = {description: 'Category deleted', schema: {status: "success", data: {statusCode: 200, result: "Category deleted"}}}
+  #swagger.responses[400] = {description: 'Category has todos', schema: {status: "fail", data: {statusCode: 400, result: "Category has todos"}}}
   #swagger.responses[404] = {description: 'Category not found', schema: {status: "fail", data: {statusCode: 404, result: "Category not found"}}}
   */
   try {
