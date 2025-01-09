@@ -11,7 +11,7 @@ var crypto = require("crypto");
 router.post("/login", async (req, res, next) => {
   /* #swagger.tags = ['Auth']
   #swagger.description = 'Endpoint to login a user'
-  #swagger.parameters['body'] = { in: 'body', description: 'User email and password', type: 'object', properties: {email: { type: 'string' }, password: { type: 'string' }} }
+  #swagger.parameters['body'] = { "name": "body", in: 'body', description: 'User email and password', type: 'object', schema: {$ref: "#/definitions/UserBodyLogin"} }
   #swagger.consumes = ["application/json"]
   #swagger.produces = ["application/json"] 
   #swagger.responses[200] = {description: 'You are logged in', schema: {status: "success", data: {statusCode: 200, result: "You are logged in", token: "token"}}}
@@ -54,7 +54,7 @@ router.post("/login", async (req, res, next) => {
 router.post("/signup", async (req, res, next) => {
   /* #swagger.tags = ['Auth']
   #swagger.description = 'Endpoint to create a new user'
-  #swagger.parameters['body'] = { in: 'body', description: 'User name, email and password', type: 'object', properties: {name: { type: 'string' }, email: { type: 'string' }, password: { type: 'string' }} }
+  #swagger.parameters['body'] = { in: 'body', description: 'User name, email and password', type: 'object', schema: {$ref: "#/definitions/UserBodySignUp"}} 
   #swagger.consumes = ["application/json"]
   #swagger.produces = ["application/json"] 
   #swagger.responses[200] = {description: 'You created an account', schema: {status: "success", data: {statusCode: 200, result: "You created an account"}}}
@@ -92,6 +92,10 @@ router.post("/signup", async (req, res, next) => {
 });
 
 router.get("/fail", (req, res) => {
+  /* #swagger.tags = ['Auth']
+  #swagger.description = 'Endpoint to test the fail response'
+  #swagger.responses[401] = {description: 'Unauthorized, malformed authorization header', schema: {status:"fail", data: {statusCode: 401, result: "Unauthorized, malformed authorization header"}}}
+  */
   return res.status(401).jsend.error({ statusCode: 401, message: "message", data: "data" });
 });
 
