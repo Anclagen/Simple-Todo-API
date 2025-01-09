@@ -48,6 +48,10 @@ class TodoService {
     return this.Status.findAll();
   }
 
+  async findOneStatus(id) {
+    return this.Status.findByPk(id);
+  }
+
   async update(id, args) {
     return this.Todo.update(
       { ...args },
