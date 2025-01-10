@@ -5,7 +5,7 @@
   "scripts": {
     "swagger": "node --env-file=./.env swagger",
     "start": "node --env-file=./.env swagger && node --env-file=./.env ./bin/www",
-    "dev": "node --watch --env-file=./.env swagger && node --watch --env-file=./.env ./bin/www"
+    "dev": "node --trace-warnings --watch --env-file=./.env swagger && node --watch --env-file=./.env ./bin/www"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",

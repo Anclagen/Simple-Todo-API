@@ -15,13 +15,13 @@ router.get("/", isAuth, async (req, res) => {
   #swagger.security = [{
       "bearerAuth": []
    }]
+   #swagger.responses[200] = {description: 'OK', schema: {status: "success", data: {statusCode: 200, result: [{$ref: "#/definitions/Category"}]}}}
+   #swagger.responses[500] = {status: "error", message: "Internal server error", data: {}}   
    */
   try {
     const result = await categoryService.findAllByUser(req.user.id);
-    // #swagger.responses[200] = {description: 'Categories found', schema: {status: "success", data: {statusCode: 200, result: [{id: 1, name: "Category Name", UserId: 1}, {id: 2, name: "Category Name", UserId: 1}]}}}
     return res.status(200).jsend.success({ statusCode: 200, result });
   } catch (error) {
-    // #swagger.responses[500] = {status: "error", message: "Internal server error", data: {}}
     return res.status(500).jsend.error({ status: "error", message: "Internal server error", data: error });
   }
 });
@@ -30,12 +30,15 @@ router.post("/", isAuth, async (req, res) => {
   /**
   #swagger.tags = ['Categories']
   #swagger.description = 'Endpoint to create a new category for the logged in user'
-  #swagger.parameters['body'] = { in: 'body', description: 'Category name', type: 'object', properties: {name: { type: 'string' }} }
+  #swagger.parameters['body'] = { in: 'body', required: true, description: 'Category name', type: 'object', schema: {$ref: "#/definitions/CategoryBody"} }
   #swagger.consumes = ["application/json"]
   #swagger.produces = ["application/json"]
   #swagger.security = [{
       "bearerAuth": []
    }]
+  #swagger.responses[201] = {description: 'Category created', schema: {status: "success", data: {statusCode: 201, result: {$ref: "#/definitions/Category"}}}}
+  #swagger.responses[400] = {description: 'Bad Request', schema: {status: "fail", data: {statusCode: 400, result: "Missing name in request body"}}}
+  #swagger.responses[500] = {status: "error", message: "Internal server error", data: {}}
    */
   try {
     const { name } = req.body;
@@ -55,14 +58,14 @@ router.put("/:id", isAuth, isCategoryOwner, async (req, res) => {
   #swagger.tags = ['Categories']
   #swagger.description = 'Endpoint to update a category for the logged in user'
   #swagger.parameters['id'] = { description: 'Category id', type: 'integer' }
-  #swagger.parameters['body'] = { in: 'body', description: 'Category name', type: 'object', properties: {name: { type: 'string' }} }
+  #swagger.parameters['body'] = { in: 'body', required: true, description: 'Category name', type: 'object', schema: {$ref: "#/definitions/CategoryBody"} }
   #swagger.consumes = ["application/json"]
   #swagger.produces = ["application/json"]
   #swagger.security = [{
       "bearerAuth": []
    }]
   #swagger.responses[200] = {description: 'Category updated', schema: {status: "success", data: {statusCode: 200, result: "Category updated"}}}
-  #swagger.responses[400] = {description: 'Missing name in request body', schema: {status: "fail", data: {statusCode: 400, result: "Missing name in request body"}}}
+  #swagger.responses[400] = {description: 'Bad Request', schema: {status: "fail", data: {statusCode: 400, result: "Missing name in request body"}}}
   #swagger.responses[404] = {description: 'Category not found', schema: {status: "fail", data: {statusCode: 404, result: "Category not found"}}}
   */
   try {
@@ -91,7 +94,7 @@ router.delete("/:id", isAuth, isCategoryOwner, async (req, res) => {
       "bearerAuth": []
     }]
   #swagger.responses[200] = {description: 'Category deleted', schema: {status: "success", data: {statusCode: 200, result: "Category deleted"}}}
-  #swagger.responses[400] = {description: 'Category has todos', schema: {status: "fail", data: {statusCode: 400, result: "Category has todos"}}}
+  #swagger.responses[400] = {description: 'Bad Request', schema: {status: "fail", data: {statusCode: 400, result: "Category has todos"}}}
   #swagger.responses[404] = {description: 'Category not found', schema: {status: "fail", data: {statusCode: 404, result: "Category not found"}}}
   */
   try {

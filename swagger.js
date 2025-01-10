@@ -4,7 +4,7 @@ const doc = {
   info: {
     version: "1.0.0",
     title: "My TODOs",
-    description: "A simple TODO app with user authentication and categories",
+    description: "A simple TODO app with user authentication, categories and statuses. Using JWT for authentication (Ensure to add 'Bearer ' before the token).",
   },
   // If the app is deployed, update this host to your production URL.
   host: "localhost:3000",
@@ -39,7 +39,7 @@ const doc = {
       UserId: 1,
     },
     CategoryBody: {
-      name: "New/Updated Category",
+      name: "Free Time",
     },
     Todo: {
       id: 1,
@@ -71,7 +71,7 @@ const doc = {
     },
     Status: {
       id: 1,
-      status: "In Progress",
+      status: "Not Started",
     },
 
     // etc...

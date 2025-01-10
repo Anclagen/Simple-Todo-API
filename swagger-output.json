@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0.0",
     "title": "My TODOs",
-    "description": "A simple TODO app with user authentication and categories"
+    "description": "A simple TODO app with user authentication, categories and statuses. Using JWT for authentication (Ensure to add 'Bearer ' before the token)."
   },
   "host": "localhost:3000",
   "basePath": "/",
@@ -27,25 +27,10 @@
           {
             "name": "body",
             "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "example": "any"
-                },
-                "password": {
-                  "example": "any"
-                }
-              }
-            },
+            "required": true,
             "description": "User email and password",
-            "properties": {
-              "email": {
-                "type": "string"
-              },
-              "password": {
-                "type": "string"
-              }
+            "schema": {
+              "$ref": "#/definitions/UserBodyLogin"
             }
           }
         ],
@@ -152,31 +137,10 @@
           {
             "name": "body",
             "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "any"
-                },
-                "email": {
-                  "example": "any"
-                },
-                "password": {
-                  "example": "any"
-                }
-              }
-            },
+            "required": true,
             "description": "User name, email and password",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              },
-              "password": {
-                "type": "string"
-              }
+            "schema": {
+              "$ref": "#/definitions/UserBodySignUp"
             }
           }
         ],
@@ -265,10 +229,38 @@
     },
     "/users/fail": {
       "get": {
-        "description": "",
+        "tags": [
+          "Auth"
+        ],
+        "description": "Endpoint to test the fail response",
         "responses": {
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized, malformed authorization header",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Unauthorized, malformed authorization header"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -291,7 +283,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Categories found",
+            "description": "OK",
             "schema": {
               "type": "object",
               "properties": {
@@ -309,21 +301,7 @@
                     "result": {
                       "type": "array",
                       "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "number",
-                            "example": 2
-                          },
-                          "name": {
-                            "type": "string",
-                            "example": "Category Name"
-                          },
-                          "UserId": {
-                            "type": "number",
-                            "example": 1
-                          }
-                        }
+                        "$ref": "#/definitions/Category"
                       }
                     }
                   }
@@ -335,7 +313,7 @@
             }
           },
           "401": {
-            "description": "Unauthorized, malformed authorization header",
+            "description": "Unauthorized, malformed or missing authorization header",
             "schema": {
               "type": "object",
               "properties": {
@@ -415,31 +393,71 @@
           {
             "name": "body",
             "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "any"
-                }
-              }
-            },
+            "required": true,
             "description": "Category name",
-            "properties": {
-              "name": {
-                "type": "string"
-              }
+            "schema": {
+              "$ref": "#/definitions/CategoryBody"
             }
           }
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Category created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "success"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 201
+                    },
+                    "result": {
+                      "$ref": "#/definitions/Category"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Missing name in request body"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized, malformed authorization header",
+            "description": "Unauthorized, malformed or missing authorization header",
             "schema": {
               "type": "object",
               "properties": {
@@ -487,7 +505,10 @@
               "xml": {
                 "name": "main"
               }
-            }
+            },
+            "status": "error",
+            "message": "Internal server error",
+            "data": {}
           }
         },
         "security": [
@@ -525,19 +546,10 @@
           {
             "name": "body",
             "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "any"
-                }
-              }
-            },
+            "required": true,
             "description": "Category name",
-            "properties": {
-              "name": {
-                "type": "string"
-              }
+            "schema": {
+              "$ref": "#/definitions/CategoryBody"
             }
           }
         ],
@@ -571,7 +583,7 @@
             }
           },
           "400": {
-            "description": "Missing name in request body",
+            "description": "Bad Request",
             "schema": {
               "type": "object",
               "properties": {
@@ -599,7 +611,7 @@
             }
           },
           "401": {
-            "description": "Unauthorized, malformed authorization header",
+            "description": "Unauthorized, malformed or missing authorization header",
             "schema": {
               "type": "object",
               "properties": {
@@ -627,7 +639,7 @@
             }
           },
           "403": {
-            "description": "You are not authorized to update this category",
+            "description": "You are not authorized to update this entity",
             "schema": {
               "type": "object",
               "properties": {
@@ -764,7 +776,7 @@
             }
           },
           "400": {
-            "description": "Category has todos",
+            "description": "Bad Request",
             "schema": {
               "type": "object",
               "properties": {
@@ -792,7 +804,7 @@
             }
           },
           "401": {
-            "description": "Unauthorized, malformed authorization header",
+            "description": "Unauthorized, malformed or missing authorization header",
             "schema": {
               "type": "object",
               "properties": {
@@ -820,7 +832,7 @@
             }
           },
           "403": {
-            "description": "You are not authorized to update this category",
+            "description": "You are not authorized to update this entity",
             "schema": {
               "type": "object",
               "properties": {
@@ -908,7 +920,13 @@
     },
     "/todos/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Todo"
+        ],
+        "description": "Endpoint to get a logged in users todos excluding todos with a deleted status",
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "name": "authorization",
@@ -918,10 +936,37 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "success"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "result": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/TodoResponse"
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized, malformed authorization header",
+            "description": "Unauthorized, malformed or missing authorization header",
             "schema": {
               "type": "object",
               "properties": {
@@ -969,12 +1014,29 @@
               "xml": {
                 "name": "main"
               }
-            }
+            },
+            "status": "error",
+            "message": "Internal server error",
+            "data": {}
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Todo"
+        ],
+        "description": "Endpoint to create a todo for the logged in user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "name": "authorization",
@@ -984,34 +1046,43 @@
           {
             "name": "body",
             "in": "body",
+            "description": "Todo name, description, statusId, categoryId",
+            "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "any"
-                },
-                "description": {
-                  "example": "any"
-                },
-                "statusId": {
-                  "example": "any"
-                },
-                "categoryId": {
-                  "example": "any"
-                }
-              }
+              "$ref": "#/definitions/TodoBody"
             }
           }
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Todo created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "success"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 201
+                    },
+                    "result": {
+                      "$ref": "#/definitions/Todo"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized, malformed authorization header",
+            "description": "Missing name, description, statusId or categoryId in request body",
             "schema": {
               "type": "object",
               "properties": {
@@ -1024,11 +1095,11 @@
                   "properties": {
                     "statusCode": {
                       "type": "number",
-                      "example": 401
+                      "example": 400
                     },
                     "result": {
                       "type": "string",
-                      "example": "Unauthorized, malformed authorization header"
+                      "example": "Missing name, description, statusId or categoryId in request body"
                     }
                   }
                 }
@@ -1038,351 +1109,8 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string",
-                  "example": "error"
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Internal server error"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {}
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/todos/all": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
           "401": {
-            "description": "Unauthorized, malformed authorization header",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string",
-                  "example": "fail"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {
-                    "statusCode": {
-                      "type": "number",
-                      "example": 401
-                    },
-                    "result": {
-                      "type": "string",
-                      "example": "Unauthorized, malformed authorization header"
-                    }
-                  }
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string",
-                  "example": "error"
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Internal server error"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {}
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/todos/deleted": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized, malformed authorization header",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string",
-                  "example": "fail"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {
-                    "statusCode": {
-                      "type": "number",
-                      "example": 401
-                    },
-                    "result": {
-                      "type": "string",
-                      "example": "Unauthorized, malformed authorization header"
-                    }
-                  }
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string",
-                  "example": "error"
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Internal server error"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {}
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/todos/statuses": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized, malformed authorization header",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string",
-                  "example": "fail"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {
-                    "statusCode": {
-                      "type": "number",
-                      "example": 401
-                    },
-                    "result": {
-                      "type": "string",
-                      "example": "Unauthorized, malformed authorization header"
-                    }
-                  }
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string",
-                  "example": "error"
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Internal server error"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {}
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/todos/{id}": {
-      "put": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "any"
-                },
-                "description": {
-                  "example": "any"
-                },
-                "statusId": {
-                  "example": "any"
-                },
-                "categoryId": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized, malformed authorization header",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string",
-                  "example": "fail"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {
-                    "statusCode": {
-                      "type": "number",
-                      "example": 401
-                    },
-                    "result": {
-                      "type": "string",
-                      "example": "Unauthorized, malformed authorization header"
-                    }
-                  }
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string",
-                  "example": "error"
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Internal server error"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {}
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized, malformed authorization header",
+            "description": "Unauthorized, malformed or missing authorization header",
             "schema": {
               "type": "object",
               "properties": {
@@ -1410,10 +1138,60 @@
             }
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Referenced resource is not owned by the user",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 403
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "You are not authorized to use this category"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Referenced resource does not exist",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Status not found"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
@@ -1438,11 +1216,728 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/todos/all": {
+      "get": {
+        "tags": [
+          "Todo"
+        ],
+        "description": "Endpoint to get all todos for the logged in user",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "success"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "result": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/TodoResponse"
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, malformed or missing authorization header",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Unauthorized, malformed authorization header"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {}
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/todos/deleted": {
+      "get": {
+        "tags": [
+          "Todo"
+        ],
+        "description": "Endpoint to get all deleted todos for the logged in user",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "success"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "result": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/TodoResponse"
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, malformed or missing authorization header",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Unauthorized, malformed authorization header"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {}
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/todos/statuses": {
+      "get": {
+        "tags": [
+          "Todo"
+        ],
+        "description": "Endpoint to get all statuses",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Statuses found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "success"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "result": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/Status"
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, malformed or missing authorization header",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Unauthorized, malformed authorization header"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {}
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/todos/{id}": {
+      "put": {
+        "tags": [
+          "Todo"
+        ],
+        "description": "Endpoint to update a todo for the logged in user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Todo id"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Todo name, description, statusId, categoryId",
+            "schema": {
+              "$ref": "#/definitions/TodoBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Todo updated",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "success"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Todo updated"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, malformed or missing authorization header",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Unauthorized, malformed authorization header"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "403": {
+            "description": "Referenced resource is not owned by the user",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 403
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "You are not authorized to use this category"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "404": {
+            "description": "Todo not found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Todo not found"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {}
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Todo"
+        ],
+        "description": "Endpoint to delete a todo for the logged in user",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Todo id"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Todo deleted",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "success"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Todo deleted"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, malformed or missing authorization header",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Unauthorized, malformed authorization header"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "403": {
+            "description": "Referenced resource is not owned by the user",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 403
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "You are not authorized to delete this todo"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "404": {
+            "description": "Referenced resource does not exist",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Todo not found"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {}
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   },
   "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "example": "John Doe"
+        },
+        "email": {
+          "type": "string",
+          "example": "example@example.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "password"
+        }
+      }
+    },
+    "UserBodySignUp": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "John Doe"
+        },
+        "email": {
+          "type": "string",
+          "example": "example@example.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "password"
+        }
+      }
+    },
+    "UserBodyLogin": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "example@example.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "password"
+        }
+      }
+    },
     "Category": {
       "type": "object",
       "properties": {
@@ -1452,12 +1947,127 @@
         },
         "name": {
           "type": "string",
-          "example": "Category Name"
+          "example": "Work"
         },
         "UserId": {
           "type": "number",
           "example": 1
         }
+      }
+    },
+    "CategoryBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Free Time"
+        }
+      }
+    },
+    "Todo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "example": "Buy Groceries"
+        },
+        "description": {
+          "type": "string",
+          "example": "Get fruits and vegetables"
+        },
+        "StatusId": {
+          "type": "number",
+          "example": 1
+        },
+        "CategoryId": {
+          "type": "number",
+          "example": 1
+        },
+        "UserId": {
+          "type": "number",
+          "example": 1
+        }
+      }
+    },
+    "TodoResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "example": "Buy Groceries"
+        },
+        "description": {
+          "type": "string",
+          "example": "Get fruits and vegetables"
+        },
+        "StatusId": {
+          "type": "number",
+          "example": 1
+        },
+        "CategoryId": {
+          "type": "number",
+          "example": 1
+        },
+        "UserId": {
+          "type": "number",
+          "example": 1
+        },
+        "Category": {
+          "$ref": "#/definitions/Category"
+        },
+        "Status": {
+          "$ref": "#/definitions/Status"
+        }
+      }
+    },
+    "TodoBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "New/Updated Todo"
+        },
+        "description": {
+          "type": "string",
+          "example": "New/Updated Description"
+        },
+        "StatusId": {
+          "type": "number",
+          "example": 1
+        },
+        "CategoryId": {
+          "type": "number",
+          "example": 1
+        }
+      }
+    },
+    "Status": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "example": 1
+        },
+        "status": {
+          "type": "string",
+          "example": "Not Started"
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
       }
     }
   }

@@ -80,12 +80,12 @@ async function validateCategory(req, res, next) {
 
   const category = await categoryService.findOne(categoryId);
   if (!category) {
-    // #swagger.responses[404] = {description: 'Category not found', schema: {status: "fail", data: {statusCode: 404, result: "Category not found"}}}
+    // #swagger.responses[404] = {description: 'Referenced resource does not exist', schema: {status: "fail", data: {statusCode: 404, result: "Category not found"}}}
     return res.status(404).jsend.fail({ statusCode: 404, result: "Category not found" });
   }
 
   if (category.UserId !== req.user.id) {
-    return res.status(403).jsend.fail({ statusCode: 403, result: "You are not authorized to update this category" });
+    return res.status(403).jsend.fail({ statusCode: 403, result: "You are not authorized to use this category" });
   }
 
   next();
@@ -103,7 +103,7 @@ async function validateStatus(req, res, next) {
 
     const status = await todoService.findOneStatus(statusId);
     if (!status) {
-      // #swagger.responses[404] = {description: 'Status not found', schema: {status: "fail", data: {statusCode: 404, result: "Status not found"}}}
+      // #swagger.responses[404] = {description: 'Referenced resource does not exist', schema: {status: "fail", data: {statusCode: 404, result: "Status not found"}}}
       return res.status(404).jsend.fail({ statusCode: 404, result: "Status not found" });
     }
     next();
@@ -116,7 +116,7 @@ async function isTodoOwner(req, res, next) {
   try {
     const todo = await todoService.findOne(req.params.id);
     if (!todo) {
-      // #swagger.responses[404] = {description: 'Todo not found', schema: {status: "fail", data: {statusCode: 404, result: "Todo not found"}}}
+      // #swagger.responses[404] = {description: 'Referenced resource does not exist', schema: {status: "fail", data: {statusCode: 404, result: "Todo not found"}}}
       return res.status(404).jsend.fail({ statusCode: 404, result: "Todo not found" });
     }
 
