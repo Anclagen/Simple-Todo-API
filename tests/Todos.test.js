@@ -1,27 +1,10 @@
-var createError = require("http-errors");
-var express = require("express");
-var jsend = require("jsend");
-var usersRouter = require("../routes/users");
-var categoriesRouter = require("../routes/categories");
-var todosRouter = require("../routes/todos");
 var { createDatabase } = require("../models");
 var crypto = require("crypto");
+var testAppFactory = require("../utilities/testAppFactory");
 const request = require("supertest");
 const createStatuses = require("../utilities/createStatuses");
 const { Sequelize } = require("sequelize");
 require("dotenv").config();
-
-//basic app setup
-var app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(jsend.middleware);
-app.use("/users", usersRouter);
-app.use("/category", categoriesRouter);
-app.use("/todos", todosRouter);
-app.use(function (req, res, next) {
-  next(createError(404));
-});
 
 // Logging in with a valid account.
 // Using the token from 1. to get all the users Todos.
@@ -42,6 +25,7 @@ describe("Todo Tests", () => {
   const email = "test@test.com";
   const password = "password";
   let db = {};
+  let app;
 
   beforeAll(async () => {
     // Create a new database for testing
@@ -52,6 +36,7 @@ describe("Todo Tests", () => {
       { host: process.env.TEST_HOST || process.env.HOST, dialect: process.env.DIALECT, logging: false }
     );
     db = createDatabase(options);
+    // Force true would be better for testing but it would delete all the data in the database if not using a test database
     await db.sequelize.sync({ force: false });
     await createStatuses(db);
 
@@ -82,6 +67,8 @@ describe("Todo Tests", () => {
       CategoryId: category.id,
       UserId: user.id,
     });
+
+    app = testAppFactory(db);
   });
 
   test("Logging in with a valid account", async () => {
