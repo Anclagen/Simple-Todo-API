@@ -1,5 +1,5 @@
 var jwt = require("jsonwebtoken");
-var db = require("../models");
+var { db } = require("../models");
 var CategoryService = require("../services/CategoryService");
 var categoryService = new CategoryService(db);
 var TodoService = require("../services/TodoService");

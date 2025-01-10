@@ -12,26 +12,11 @@ var usersRouter = require("./routes/users");
 var categoriesRouter = require("./routes/categories");
 var todosRouter = require("./routes/todos");
 
-var db = require("./models");
+var createStatuses = require("./utilities/createStatuses");
+var { db } = require("./models");
 
-// Check if the statuses are already in the database, if not, create them
-const createStatuses = async () => {
-  try {
-    const statuses = ["Not Started", "Started", "Completed", "Deleted"];
-    statuses.forEach(async (status) => {
-      await db.Status.findOrCreate({
-        where: { status },
-        defaults: { status },
-      });
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-// TODO: Change back to force true?
 db.sequelize.sync({ force: false }).then(async () => {
-  createStatuses();
+  createStatuses(db);
 });
 
 var app = express();

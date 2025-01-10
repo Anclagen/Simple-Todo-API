@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var jwt = require("jsonwebtoken");
-var db = require("../models");
+var { db } = require("../models");
 var UserService = require("../services/UserService");
 var userService = new UserService(db);
 var crypto = require("crypto");

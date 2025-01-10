@@ -1,9 +1,9 @@
 var express = require("express");
 var router = express.Router();
-var db = require("../models");
+var { db } = require("../models");
 var TodoService = require("../services/TodoService");
 var todoService = new TodoService(db);
-const { isAuth, isCategoryOwner, validateBody, validateCategory, validateStatus, isTodoOwner } = require("../middleware/middleware");
+const { isAuth, validateBody, validateCategory, validateStatus, isTodoOwner } = require("../middleware/middleware");
 
 /* Return all the logged in users todo's with the category associated with each todo and
 status that is not the deleted status */
