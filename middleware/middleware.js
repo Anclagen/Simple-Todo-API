@@ -10,10 +10,8 @@ function isAuth(req, res, next) {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      // #swagger.responses[401] = {description: 'Unauthorized, malformed or missing authorization header', schema: {status:"fail", data: {statusCode: 401, result: "Unauthorized, malformed authorization header"}}}
-      return res.status(401).jsend.fail({
-        data: { statusCode: 401, result: "Unauthorized, malformed authorization header" },
-      });
+      // #swagger.responses[401] = {description: 'Unauthorized, malformed or missing authorization header', schema: {status:"fail", data: {statusCode: 401, result: "Unauthorized, malformed or missing authorization header"}}}
+      return res.status(401).jsend.fail({ statusCode: 401, result: "Unauthorized, malformed or missing authorization header" });
     }
 
     // token errors are caught and handled in the catch

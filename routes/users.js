@@ -14,7 +14,7 @@ router.post("/login", async (req, res, next) => {
   #swagger.parameters['body'] = { "name": "body", in: 'body', required: true, description: 'User email and password', type: 'object', schema: {$ref: "#/definitions/UserBodyLogin"} }
   #swagger.consumes = ["application/json"]
   #swagger.produces = ["application/json"] 
-  #swagger.responses[200] = {description: 'You are logged in', schema: {status: "success", data: {statusCode: 200, result: "You are logged in", token: "token"}}}
+  #swagger.responses[200] = {description: 'You are logged in', schema: {status: "success", data: {statusCode: 200, result: {id: 1, name: "tester", token: "token" }}}
   #swagger.responses[400] = {description: 'Incorrect email or password', schema: {status: "fail", data: {statusCode: 400, result: "Incorrect email or password"}}}
   #swagger.responses[500] = {description: 'Internal server error', schema: {status: "error", message: "Internal server error", data: {}}}
   */
@@ -43,7 +43,7 @@ router.post("/login", async (req, res, next) => {
         expiresIn: 86400, // 24 hours
       });
 
-      res.status(200).jsend.success({ statusCode: 200, result: "You are logged in", token });
+      res.status(200).jsend.success({ statusCode: 200, result: { id: user.id, name: user.name, token } });
     });
   } catch (error) {
     return res.status(500).jsend.error({ status: "error", message: "Internal server error", data: error });

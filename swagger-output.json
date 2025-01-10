@@ -36,87 +36,13 @@
         ],
         "responses": {
           "200": {
-            "description": "You are logged in",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string",
-                  "example": "success"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {
-                    "statusCode": {
-                      "type": "number",
-                      "example": 200
-                    },
-                    "result": {
-                      "type": "string",
-                      "example": "You are logged in"
-                    },
-                    "token": {
-                      "type": "string",
-                      "example": "token"
-                    }
-                  }
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
+            "description": "OK"
           },
           "400": {
-            "description": "Incorrect email or password",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string",
-                  "example": "fail"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {
-                    "statusCode": {
-                      "type": "number",
-                      "example": 400
-                    },
-                    "result": {
-                      "type": "string",
-                      "example": "Incorrect email or password"
-                    }
-                  }
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
+            "description": "Bad Request"
           },
           "500": {
-            "description": "Internal server error",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string",
-                  "example": "error"
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Internal server error"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {}
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
+            "description": "Internal Server Error"
           }
         }
       }
@@ -330,7 +256,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Unauthorized, malformed authorization header"
+                      "example": "Unauthorized, malformed or missing authorization header"
                     }
                   }
                 }
@@ -474,7 +400,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Unauthorized, malformed authorization header"
+                      "example": "Unauthorized, malformed or missing authorization header"
                     }
                   }
                 }
@@ -628,7 +554,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Unauthorized, malformed authorization header"
+                      "example": "Unauthorized, malformed or missing authorization header"
                     }
                   }
                 }
@@ -821,7 +747,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Unauthorized, malformed authorization header"
+                      "example": "Unauthorized, malformed or missing authorization header"
                     }
                   }
                 }
@@ -983,7 +909,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Unauthorized, malformed authorization header"
+                      "example": "Unauthorized, malformed or missing authorization header"
                     }
                   }
                 }
@@ -1127,7 +1053,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Unauthorized, malformed authorization header"
+                      "example": "Unauthorized, malformed or missing authorization header"
                     }
                   }
                 }
@@ -1289,7 +1215,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Unauthorized, malformed authorization header"
+                      "example": "Unauthorized, malformed or missing authorization header"
                     }
                   }
                 }
@@ -1395,7 +1321,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Unauthorized, malformed authorization header"
+                      "example": "Unauthorized, malformed or missing authorization header"
                     }
                   }
                 }
@@ -1501,7 +1427,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Unauthorized, malformed authorization header"
+                      "example": "Unauthorized, malformed or missing authorization header"
                     }
                   }
                 }
@@ -1623,7 +1549,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Unauthorized, malformed authorization header"
+                      "example": "Unauthorized, malformed or missing authorization header"
                     }
                   }
                 }
@@ -1788,7 +1714,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Unauthorized, malformed authorization header"
+                      "example": "Unauthorized, malformed or missing authorization header"
                     }
                   }
                 }
