@@ -119,6 +119,9 @@ describe("Todo Tests", () => {
     expect(response.body.status).toBe("success");
     expect(response.body.data.statusCode).toBe(200);
     expect(response.body.data.result).toBeDefined();
+    // Check if the status is deleted
+    const deletedTodo = await request(app).get(`/todo/deleted`).set("Authorization", `Bearer ${token}`);
+    expect(deletedTodo.body.data.result[0].Status.status).toBe("Deleted");
   });
 
   test("Get Todos without sending JWT token in the header", async () => {

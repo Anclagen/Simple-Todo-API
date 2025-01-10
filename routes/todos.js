@@ -148,22 +148,31 @@ router.put("/:id", isAuth, isTodoOwner, validateCategory, validateStatus, async 
 router.delete("/:id", isAuth, isTodoOwner, async (req, res) => {
   /**
    #swagger.tags = ['Todo']
-   #swagger.description = 'Endpoint to delete a todo for the logged in user'
+   #swagger.description = 'Endpoint to set a todo status to Deleted for the logged in user'
    #swagger.parameters['id'] = { description: 'Todo id', type: 'integer' }
    #swagger.produces = ["application/json"]
    #swagger.security = [{
       "bearerAuth": []
    }]
-   #swagger.responses[200] = {description: 'Todo deleted', schema: {status: "success", data: {statusCode: 200, result: "Todo deleted"}}}
+   #swagger.responses[200] = {description: 'Todo deleted', schema: {status: "success", data: {statusCode: 200, result: "Todo status updated to Deleted"}}}
    #swagger.responses[403] = {description: 'Referenced resource is not owned by the user', schema: {status: "fail", data: {statusCode: 403, result: "You are not authorized to delete this todo"}}}
    */
   try {
     const id = req.params.id;
-    const result = await todoService.delete(id);
-    return res.status(200).jsend.success({ statusCode: 200, result: "Todo deleted" });
+    const result = await todoService.delete(id, { StatusId: 4 });
+    return res.status(200).jsend.success({ statusCode: 200, result: "Todo Status updated to Deleted" });
   } catch (error) {
     return res.status(500).jsend.error({ status: "error", message: "Internal server error", data: error });
   }
+
+  // Rereading assignment instructions, I see that we should not delete todos, but rather mark them as deleted
+  // try {
+  //   const id = req.params.id;
+  //   const result = await todoService.actuallyDelete(id);
+  //   return res.status(200).jsend.success({ statusCode: 200, result: "Todo deleted" });
+  // } catch (error) {
+  //   return res.status(500).jsend.error({ status: "error", message: "Internal server error", data: error });
+  // }
 });
 
 module.exports = router;

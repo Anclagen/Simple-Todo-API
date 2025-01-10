@@ -1649,7 +1649,7 @@
         "tags": [
           "Todo"
         ],
-        "description": "Endpoint to delete a todo for the logged in user",
+        "description": "Endpoint to set a todo status to Deleted for the logged in user",
         "produces": [
           "application/json"
         ],
@@ -1686,7 +1686,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Todo deleted"
+                      "example": "Todo status updated to Deleted"
                     }
                   }
                 }

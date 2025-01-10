@@ -57,11 +57,23 @@ class TodoService {
       { ...args },
       {
         where: { id },
+        returning: true,
+        plain: true,
       }
     );
   }
 
   async delete(id) {
+    const deletedStatus = await this.Status.findOne({ where: { status: "Deleted" } });
+    return this.Todo.update(
+      { StatusId: deletedStatus.id },
+      {
+        where: { id },
+      }
+    );
+  }
+
+  async actuallyDelete(id) {
     return this.Todo.destroy({
       where: { id },
     });
