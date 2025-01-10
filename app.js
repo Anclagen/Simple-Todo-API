@@ -35,7 +35,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(jsend.middleware);
 app.use("/users", usersRouter);
 app.use("/category", categoriesRouter);
-app.use("/todos", todosRouter);
+app.use("/todo", todosRouter);
 
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 

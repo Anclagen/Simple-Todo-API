@@ -1,34 +1,57 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/KbDL2RyF)
-
 ![](http://143.42.108.232/pvt/Noroff-64.png)
+
 # Noroff
+
 ## Back-end Development Year 1
+
 ### REST API - Course Assignment 1 <sup>V2</sup>
-
-Startup code for Noroff back-end development 1 - REST API course.
-
-Instruction for the course assignment is in the LMS (Moodle) system of Noroff.
-[https://lms.noroff.no](https://lms.noroff.no)
-
-![](http://143.42.108.232/pvt/important.png)
-
-You will not be able to make any submission after the deadline of the course assignment. Make sure to make all your commit **BEFORE** the deadline
-
-![](http://143.42.108.232/pvt/help_small.png)
-
-If you are unsure of any instructions for the course assignment, contact out to your teacher on **Microsoft Teams**.
-
-**REMEMBER** Your Moodle LMS submission must have your repository link **AND** your Github username in the text file.
-
----
 
 # Application Installation and Usage Instructions
 
+- Clone the repository
+- Run `npm install` to install the dependencies
+- Run `npm start` to start the server
+- The server will be running on `http://localhost:3000`
 
-# Environment Variables 
+# Usage
 
+- Use Postman to test the API endpoints or create a front-end application
+- Documentation of endpoints will be available at `http://localhost:3000/doc`
+
+# Testing
+
+- Run `npm run test` to run the tests.
+- Tests will run on the existing database if no test environment variables are provided.
+
+# Environment Variables
+
+- Create a `.env` file in the root directory
+- Add the following environment variables to the file
+
+```env
+HOST = "localhost";
+ADMIN_USERNAME = "admin";
+ADMIN_PASSWORD = "P@ssw0rd";
+DATABASE_NAME = "myTodo";
+DIALECT = "mysql";
+PORT = "3000";
+TOKEN_SECRET = "mysecret";
+
+// Optional for jest testing otherwise tests will use the above values
+TEST_DATABASE_NAME;
+TEST_ADMIN_USERNAME;
+TEST_ADMIN_PASSWORD;
+TEST_HOST;
+```
 
 # Additional Libraries/Packages
 
+jsonwebtoken - For generating and verifying tokens
+jest - For testing
+supertest - For testing API endpoints
+swagger-jsdoc - For generating swagger documentation
+swagger-ui-express - For displaying swagger documentation
 
 # NodeJS Version Used
+
+Node version: `v20.17.0`

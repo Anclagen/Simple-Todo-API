@@ -68,6 +68,7 @@ describe("Todo Tests", () => {
       UserId: user.id,
     });
 
+    // Create the app for testing
     app = testAppFactory(db);
   });
 
@@ -87,7 +88,7 @@ describe("Todo Tests", () => {
   });
 
   test("Get all the users Todos", async () => {
-    const response = await request(app).get("/todos").set("Authorization", `Bearer ${token}`);
+    const response = await request(app).get("/todo").set("Authorization", `Bearer ${token}`);
     console.log(response.body);
     expect(response.statusCode).toBe(200);
     expect(response.body.status).toBe("success");
@@ -98,7 +99,7 @@ describe("Todo Tests", () => {
   });
 
   test("Add a new Todo item", async () => {
-    const response = await request(app).post("/todos").set("Authorization", `Bearer ${token}`).send({
+    const response = await request(app).post("/todo").set("Authorization", `Bearer ${token}`).send({
       name: "test2",
       description: "test2",
       statusId: statuses[0].id,
@@ -113,7 +114,7 @@ describe("Todo Tests", () => {
   });
 
   test("Delete the created Todo item", async () => {
-    const response = await request(app).delete(`/todos/${todo2.id}`).set("Authorization", `Bearer ${token}`);
+    const response = await request(app).delete(`/todo/${todo2.id}`).set("Authorization", `Bearer ${token}`);
     expect(response.statusCode).toBe(200);
     expect(response.body.status).toBe("success");
     expect(response.body.data.statusCode).toBe(200);
@@ -121,8 +122,7 @@ describe("Todo Tests", () => {
   });
 
   test("Get Todos without sending JWT token in the header", async () => {
-    const response = await request(app).get("/todos");
-    console.log(response.body);
+    const response = await request(app).get("/todo");
     expect(response.statusCode).toBe(401);
     expect(response.body.status).toBe("fail");
     expect(response.body.data.statusCode).toBe(401);
@@ -130,8 +130,7 @@ describe("Todo Tests", () => {
   });
 
   test("Get Todos by sending an invalid JWT token", async () => {
-    const response = await request(app).get("/todos").set("Authorization", `Bearer ${token}1`);
-    console.log(response.body);
+    const response = await request(app).get("/todo").set("Authorization", `Bearer ${token}1`);
     expect(response.statusCode).toBe(401);
     expect(response.body.status).toBe("fail");
     expect(response.body.data.statusCode).toBe(401);

@@ -844,7 +844,7 @@
         ]
       }
     },
-    "/todos/": {
+    "/todo/": {
       "get": {
         "tags": [
           "Todo"
@@ -1150,7 +1150,7 @@
         ]
       }
     },
-    "/todos/all": {
+    "/todo/all": {
       "get": {
         "tags": [
           "Todo"
@@ -1256,7 +1256,7 @@
         ]
       }
     },
-    "/todos/deleted": {
+    "/todo/deleted": {
       "get": {
         "tags": [
           "Todo"
@@ -1362,7 +1362,7 @@
         ]
       }
     },
-    "/todos/statuses": {
+    "/todo/statuses": {
       "get": {
         "tags": [
           "Todo"
@@ -1468,7 +1468,7 @@
         ]
       }
     },
-    "/todos/{id}": {
+    "/todo/{id}": {
       "put": {
         "tags": [
           "Todo"

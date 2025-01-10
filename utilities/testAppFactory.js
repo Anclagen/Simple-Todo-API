@@ -15,7 +15,7 @@ function testAppFactory(db) {
   // If your routers need the db, you can pass them here, or have them import from db
   app.use("/users", usersRouter);
   app.use("/category", categoriesRouter);
-  app.use("/todos", todosRouter);
+  app.use("/todo", todosRouter);
 
   app.use((req, res, next) => {
     next(createError(404));
