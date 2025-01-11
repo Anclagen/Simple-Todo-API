@@ -27,19 +27,21 @@ describe("Todo Tests", () => {
   let db = {};
   let app;
 
+  // Create a new database for testing
+  // const options = new Sequelize(
+  //   process.env.TEST_DATABASE_NAME || process.env.DATABASE_NAME,
+  //   process.env.TEST_ADMIN_USERNAME || process.env.ADMIN_USERNAME,
+  //   process.env.TEST_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD,
+  //   { host: process.env.TEST_HOST || process.env.HOST, dialect: process.env.DIALECT, logging: false }
+  // );
+
   beforeAll(async () => {
-    // Create a new database for testing
-    const options = new Sequelize(
-      process.env.TEST_DATABASE_NAME || process.env.DATABASE_NAME,
-      process.env.TEST_ADMIN_USERNAME || process.env.ADMIN_USERNAME,
-      process.env.TEST_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD,
-      { host: process.env.TEST_HOST || process.env.HOST, dialect: process.env.DIALECT, logging: false }
-    );
+    // Create a database for testing
+    const options = new Sequelize(process.env.DATABASE_NAME, process.env.ADMIN_USERNAME, process.env.ADMIN_PASSWORD, { host: process.env.HOST, dialect: process.env.DIALECT, logging: false });
     db = createDatabase(options);
     // Force true would be better for testing but it would delete all the data in the database if not using a test database
     await db.sequelize.sync({ force: false });
     await createStatuses(db);
-
     // Create a new user for testing
     const salt = crypto.randomBytes(16);
     const encryptedPassword = crypto.pbkdf2Sync(password, salt, 310000, 32, "sha256");
@@ -68,6 +70,8 @@ describe("Todo Tests", () => {
       UserId: user.id,
     });
 
+    console.log(user.id, user.email, category.id, statuses[0].id);
+
     // Create the app for testing
     app = testAppFactory(db);
   });
@@ -89,7 +93,6 @@ describe("Todo Tests", () => {
 
   test("Get all the users Todos", async () => {
     const response = await request(app).get("/todo").set("Authorization", `Bearer ${token}`);
-    console.log(response.body);
     expect(response.statusCode).toBe(200);
     expect(response.body.status).toBe("success");
     expect(response.body.data.statusCode).toBe(200);
@@ -142,10 +145,10 @@ describe("Todo Tests", () => {
 
   afterAll(async () => {
     // Delete the user and all associated data
-    await db.Todo.destroy({ where: { id: todo.id } });
-    await db.Todo.destroy({ where: { id: todo2.id } });
-    await db.Category.destroy({ where: { UserId: user.id } });
-    await db.User.destroy({ where: { id: user.id } });
+    todo?.id && (await db.Todo.destroy({ where: { id: todo.id } }));
+    todo2?.id && (await db.Todo.destroy({ where: { id: todo2.id } }));
+    category?.id && (await db.Category.destroy({ where: { id: category.id } }));
+    user?.id && (await db.User.destroy({ where: { id: user.id } }));
     await db.sequelize.close();
   });
 });

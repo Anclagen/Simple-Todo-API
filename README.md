@@ -9,24 +9,48 @@
 # Application Installation and Usage Instructions
 
 - Clone the repository
-- Run `npm install` to install the dependencies
-- Run `npm start` to start the server
-- The server will be running on `http://localhost:3000`
+
+```bash
+git clone https://github.com/noroff-backend-1/mar24ft-api-ca-1-Anclagen.git
+```
+
+- Install the dependencies
+
+```bash
+npm install
+```
+
+- Ensure you have a MySQL database running, and create a database for the application.
+- Create a `.env` file in the root directory from the `.env_example` file and add your environment variables.
+- Start the server
+
+```bash
+npm run start
+```
+
+- The server will be running on `http://localhost:3000`, or the port specified in the `.env` file.
+- Documentation of endpoints will be available at `http://localhost:3000/doc` or the port specified in the `.env` file.
 
 # Usage
 
-- Use Postman to test the API endpoints or create a front-end application
-- Documentation of endpoints will be available at `http://localhost:3000/doc`
+- Use Postman or any other API testing tool to test the API endpoints or create a front-end application
 
 # Testing
 
-- Run `npm run test` to run the tests.
-- Tests will run on the existing database if no test environment variables are provided.
+- ensure you have a mysql database running with your environment variables set in the `.env` file.
+- Run the tests using the following command
+
+```bash
+npm run test
+```
+
+- Tests will run on the existing database and should clean up after themselves. Alternatively, you can create a test database.
 
 # Environment Variables
 
 - Create a `.env` file in the root directory
-- Add the following environment variables to the file
+- An example is provided below and in the env_example file.
+- Add the following environment variables to the file and replace the values with your own.
 
 ```env
 HOST = "localhost";
@@ -36,12 +60,6 @@ DATABASE_NAME = "myTodo";
 DIALECT = "mysql";
 PORT = "3000";
 TOKEN_SECRET = "mysecret";
-
-// Optional for jest testing otherwise tests will use the above values
-TEST_DATABASE_NAME;
-TEST_ADMIN_USERNAME;
-TEST_ADMIN_PASSWORD;
-TEST_HOST;
 ```
 
 # Additional Libraries/Packages
