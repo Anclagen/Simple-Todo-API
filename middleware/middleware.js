@@ -73,7 +73,7 @@ async function validateCategory(req, res, next) {
 
   // If no categoryId is provided, move to the next middleware
   if (!categoryId) {
-    next();
+    return next();
   }
 
   const category = await categoryService.findOne(categoryId);
@@ -96,7 +96,7 @@ async function validateStatus(req, res, next) {
 
     // If no statusId is provided, move to the next middleware
     if (!statusId) {
-      next();
+      return next();
     }
 
     const status = await todoService.findOneStatus(statusId);

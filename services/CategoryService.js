@@ -21,7 +21,7 @@ class CategoryService {
   }
 
   async findOne(id) {
-    return this.Category.findOne({ where: { id } });
+    return this.Category.findByPk(id);
   }
 
   async update(id, name) {
