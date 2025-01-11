@@ -43,9 +43,14 @@ router.post("/", isAuth, async (req, res) => {
   try {
     const { name } = req.body;
     const userId = req.user.id;
+    // Check if the name is missing or invalid
     if (!name) {
       return res.status(400).jsend.fail({ statusCode: 400, result: "Missing name in request body" });
     }
+    if (typeof name !== "string" || name.trim().length === 0) {
+      return res.status(400).jsend.fail({ statusCode: 400, result: "Name must be a string and at least one character" });
+    }
+
     const result = await categoryService.create(name, userId);
     return res.status(201).jsend.success({ statusCode: 201, result });
   } catch (error) {
@@ -73,6 +78,11 @@ router.put("/:id", isAuth, isCategoryOwner, async (req, res) => {
     if (!name) {
       return res.status(400).jsend.fail({ statusCode: 400, result: "Missing name in request body" });
     }
+
+    if (typeof name !== "string" || name.trim().length === 0) {
+      return res.status(400).jsend.fail({ statusCode: 400, result: "Name must be a string and at least one character" });
+    }
+
     const result = await categoryService.update(req.params.id, name);
 
     if (!result) {
