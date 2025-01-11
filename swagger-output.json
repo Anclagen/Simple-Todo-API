@@ -17,12 +17,6 @@
           "Auth"
         ],
         "description": "Endpoint to login a user",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "name": "body",
@@ -60,7 +54,7 @@
                         },
                         "name": {
                           "type": "string",
-                          "example": "test"
+                          "example": "John Doe"
                         },
                         "token": {
                           "type": "string",
@@ -77,7 +71,7 @@
             }
           },
           "400": {
-            "description": "Incorrect email or password",
+            "description": "Invalid email or password",
             "schema": {
               "type": "object",
               "properties": {
@@ -94,7 +88,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Incorrect email or password"
+                      "example": "Invalid values in request body for: email (must be a valid email), password (is required)"
                     }
                   }
                 }
@@ -105,27 +99,7 @@
             }
           },
           "500": {
-            "description": "Internal server error",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string",
-                  "example": "error"
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Internal server error"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {}
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
+            "description": "Internal Server Error"
           }
         }
       }
@@ -1091,7 +1065,7 @@
             }
           },
           "400": {
-            "description": "Missing name, description, statusId or categoryId in request body",
+            "description": "Invalid data type in request body",
             "schema": {
               "type": "object",
               "properties": {
@@ -1108,7 +1082,7 @@
                     },
                     "result": {
                       "type": "string",
-                      "example": "Missing name, description, statusId or categoryId in request body"
+                      "example": "Status ID must be a number"
                     }
                   }
                 }
@@ -1614,6 +1588,34 @@
               }
             }
           },
+          "400": {
+            "description": "Invalid data type in request body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Status ID must be a number"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized, malformed or missing authorization header",
             "schema": {
@@ -1770,6 +1772,34 @@
                     "result": {
                       "type": "string",
                       "example": "Todo status updated to Deleted"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid todo id",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Invalid todo id"
                     }
                   }
                 }

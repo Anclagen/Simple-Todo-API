@@ -4,6 +4,7 @@ var CategoryService = require("../services/CategoryService");
 var categoryService = new CategoryService(db);
 var TodoService = require("../services/TodoService");
 var todoService = new TodoService(db);
+const { validationResult } = require("express-validator");
 
 // Middleware function to determine if the API endpoint request is from an authenticated user
 function isAuth(req, res, next) {
@@ -34,6 +35,12 @@ function isAuth(req, res, next) {
 async function isCategoryOwner(req, res, next) {
   try {
     // Check if the category exists
+
+    if (isNaN(req.params.id)) {
+      // #swagger.responses[400] = {description: 'Invalid category id', schema: {status: "fail", data: {statusCode: 400, result: "Invalid category id"}}}
+      return res.status(400).jsend.fail({ statusCode: 400, result: "Category id must be a number" });
+    }
+
     const category = await categoryService.findOne(req.params.id);
     if (!category) {
       // #swagger.responses[404] = {description: 'Category not found', schema: {status: "fail", data: {statusCode: 404, result: "Category not found"}}}
@@ -61,6 +68,11 @@ async function validateBody(req, res, next) {
       return res.status(400).jsend.fail({ statusCode: 400, result: "Missing name, description, statusId or categoryId in request body" });
     }
 
+    if (typeof name !== "string" || typeof description !== "string" || typeof statusId !== "number" || typeof categoryId !== "number") {
+      // #swagger.responses[400] = {description: 'Invalid data type in request body', schema: {status: "fail", data: {statusCode: 400, result: "Invalid data type in request body"}}}
+      return res.status(400).jsend.fail({ statusCode: 400, result: "Invalid data type in request body" });
+    }
+
     next();
   } catch (error) {
     return res.status(500).jsend.error({ status: "error", message: "Internal server error", data: error });
@@ -74,6 +86,11 @@ async function validateCategory(req, res, next) {
   // If no categoryId is provided, move to the next middleware
   if (!categoryId) {
     return next();
+  }
+
+  if (typeof categoryId !== "number") {
+    // #swagger.responses[400] = {description: 'Invalid data type in request body', schema: {status: "fail", data: {statusCode: 400, result: "Invalid data type in request body"}}}
+    return res.status(400).jsend.fail({ statusCode: 400, result: "Category ID must be a number" });
   }
 
   const category = await categoryService.findOne(categoryId);
@@ -99,6 +116,11 @@ async function validateStatus(req, res, next) {
       return next();
     }
 
+    if (typeof statusId !== "number") {
+      // #swagger.responses[400] = {description: 'Invalid data type in request body', schema: {status: "fail", data: {statusCode: 400, result: "Status ID must be a number"}}}
+      return res.status(400).jsend.fail({ statusCode: 400, result: "Status ID must be a number" });
+    }
+
     const status = await todoService.findOneStatus(statusId);
     if (!status) {
       // #swagger.responses[404] = {description: 'Referenced resource does not exist', schema: {status: "fail", data: {statusCode: 404, result: "Status not found"}}}
@@ -112,6 +134,11 @@ async function validateStatus(req, res, next) {
 
 async function isTodoOwner(req, res, next) {
   try {
+    if (isNaN(req.params.id)) {
+      // #swagger.responses[400] = {description: 'Invalid todo id', schema: {status: "fail", data: {statusCode: 400, result: "Invalid todo id"}}}
+      return res.status(400).jsend.fail({ statusCode: 400, result: "Todo id must be a number" });
+    }
+
     const todo = await todoService.findOne(req.params.id);
     if (!todo) {
       // #swagger.responses[404] = {description: 'Referenced resource does not exist', schema: {status: "fail", data: {statusCode: 404, result: "Todo not found"}}}
@@ -128,6 +155,20 @@ async function isTodoOwner(req, res, next) {
   }
 }
 
+async function handleExpressValidationError(err, req, res, next) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const message = errors
+      .array()
+      .map((error) => `${error.path} (${error.msg})`)
+      .join(", ");
+    console.log(message);
+    return res.status(400).jsend.fail({ statusCode: 400, result: `Invalid or missing values in request body for: ${message}` });
+  }
+
+  next();
+}
+
 module.exports = {
   isAuth,
   isCategoryOwner,
@@ -135,4 +176,5 @@ module.exports = {
   validateCategory,
   validateStatus,
   isTodoOwner,
+  handleExpressValidationError,
 };
