@@ -3,7 +3,7 @@ var router = express.Router();
 var { db } = require("../models");
 var TodoService = require("../services/TodoService");
 var todoService = new TodoService(db);
-const { isAuth, validateBody, validateCategory, validateStatus, isTodoOwner } = require("../middleware/middleware");
+const { isAuth, validateTodoBody, validateCategory, validateStatus, isTodoOwner } = require("../middleware/middleware");
 
 /* Return all the logged in users todo's with the category associated with each todo and
 status that is not the deleted status */
@@ -70,7 +70,7 @@ router.get("/deleted", isAuth, async (req, res) => {
 });
 
 // Add a new todo with their category for the logged in user
-router.post("/", isAuth, validateBody, validateCategory, validateStatus, async (req, res) => {
+router.post("/", isAuth, validateTodoBody, validateCategory, validateStatus, async (req, res) => {
   /**
   #swagger.tags = ['Todo']
   #swagger.description = 'Endpoint to create a todo for the logged in user'
@@ -131,6 +131,9 @@ router.put("/:id", isAuth, isTodoOwner, validateCategory, validateStatus, async 
     const { name, description, statusId, categoryId } = req.body;
     const userId = req.user.id;
     const id = req.params.id;
+    if ((name && typeof name !== "string") || (description && typeof description !== "string") || (statusId && typeof statusId !== "number") || (categoryId && typeof categoryId !== "number")) {
+      return res.status(400).jsend.fail({ statusCode: 400, result: "Invalid data type in request body" });
+    }
     // only add defined values to the args object
     const args = {};
     if (name) args.name = name;

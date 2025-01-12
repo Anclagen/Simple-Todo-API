@@ -5,7 +5,7 @@ var CategoryService = require("../services/CategoryService");
 var categoryService = new CategoryService(db);
 var TodoService = require("../services/TodoService");
 var todoService = new TodoService(db);
-const { isAuth, isCategoryOwner } = require("../middleware/middleware");
+const { isAuth, isCategoryOwner, validateBodyName } = require("../middleware/middleware");
 
 router.get("/", isAuth, async (req, res) => {
   /**
@@ -26,7 +26,7 @@ router.get("/", isAuth, async (req, res) => {
   }
 });
 
-router.post("/", isAuth, async (req, res) => {
+router.post("/", isAuth, validateBodyName, async (req, res) => {
   /**
   #swagger.tags = ['Categories']
   #swagger.description = 'Endpoint to create a new category for the logged in user'
@@ -43,14 +43,6 @@ router.post("/", isAuth, async (req, res) => {
   try {
     const { name } = req.body;
     const userId = req.user.id;
-    // Check if the name is missing or invalid
-    if (!name) {
-      return res.status(400).jsend.fail({ statusCode: 400, result: "Missing name in request body" });
-    }
-    if (typeof name !== "string" || name.trim().length === 0) {
-      return res.status(400).jsend.fail({ statusCode: 400, result: "Name must be a string and at least one character" });
-    }
-
     const result = await categoryService.create(name, userId);
     return res.status(201).jsend.success({ statusCode: 201, result });
   } catch (error) {
@@ -58,7 +50,7 @@ router.post("/", isAuth, async (req, res) => {
   }
 });
 
-router.put("/:id", isAuth, isCategoryOwner, async (req, res) => {
+router.put("/:id", isAuth, validateBodyName, isCategoryOwner, async (req, res) => {
   /**
   #swagger.tags = ['Categories']
   #swagger.description = 'Endpoint to update a category for the logged in user'
@@ -75,14 +67,6 @@ router.put("/:id", isAuth, isCategoryOwner, async (req, res) => {
   */
   try {
     const { name } = req.body;
-    if (!name) {
-      return res.status(400).jsend.fail({ statusCode: 400, result: "Missing name in request body" });
-    }
-
-    if (typeof name !== "string" || name.trim().length === 0) {
-      return res.status(400).jsend.fail({ statusCode: 400, result: "Name must be a string and at least one character" });
-    }
-
     const result = await categoryService.update(req.params.id, name);
 
     if (!result) {

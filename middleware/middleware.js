@@ -60,7 +60,7 @@ async function isCategoryOwner(req, res, next) {
   }
 }
 
-async function validateBody(req, res, next) {
+async function validateTodoBody(req, res, next) {
   try {
     const { name, description, statusId, categoryId } = req.body;
     if (!name || !description || !statusId || !categoryId) {
@@ -71,6 +71,50 @@ async function validateBody(req, res, next) {
     if (typeof name !== "string" || typeof description !== "string" || typeof statusId !== "number" || typeof categoryId !== "number") {
       // #swagger.responses[400] = {description: 'Invalid data type in request body', schema: {status: "fail", data: {statusCode: 400, result: "Invalid data type in request body"}}}
       return res.status(400).jsend.fail({ statusCode: 400, result: "Invalid data type in request body" });
+    }
+
+    next();
+  } catch (error) {
+    return res.status(500).jsend.error({ status: "error", message: "Internal server error", data: error });
+  }
+}
+
+async function validateLoginBody(req, res, next) {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      // #swagger.responses[400] = {description: 'Missing email or password in request body', schema: {status: "fail", data: {statusCode: 400, result: "Missing email or password in request body"}}}
+      return res.status(400).jsend.fail({ statusCode: 400, result: "Missing email or password in request body" });
+    }
+
+    if (typeof email !== "string" || typeof password !== "string") {
+      // #swagger.responses[400] = {description: 'Invalid data type in request body', schema: {status: "fail", data: {statusCode: 400, result: "Invalid data type in request body"}}}
+      return res.status(400).jsend.fail({ statusCode: 400, result: "Invalid data type in request body" });
+    }
+
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(email)) {
+      // #swagger.responses[400] = {description: 'Invalid email format', schema: {status: "fail", data: {statusCode: 400, result: "Invalid email format"}}}
+      return res.status(400).jsend.fail({ statusCode: 400, result: "Invalid email format" });
+    }
+
+    next();
+  } catch (error) {
+    return res.status(500).jsend.error({ status: "error", message: "Internal server error", data: error });
+  }
+}
+
+async function validateBodyName(req, res, next) {
+  try {
+    const { name } = req.body;
+    if (!name) {
+      // #swagger.responses[400] = {description: 'Missing name in request body', schema: {status: "fail", data: {statusCode: 400, result: "Missing name in request body"}}}
+      return res.status(400).jsend.fail({ statusCode: 400, result: "Missing name in request body" });
+    }
+
+    if (typeof name !== "string" || name.trim().length === 0) {
+      // #swagger.responses[400] = {description: 'Invalid data type in request body', schema: {status: "fail", data: {statusCode: 400, result: "Name must be a string and at least one character"}}}
+      return res.status(400).jsend.fail({ statusCode: 400, result: "Name must be a string and at least one character" });
     }
 
     next();
@@ -155,26 +199,13 @@ async function isTodoOwner(req, res, next) {
   }
 }
 
-async function handleExpressValidationError(err, req, res, next) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const message = errors
-      .array()
-      .map((error) => `${error.path} (${error.msg})`)
-      .join(", ");
-    console.log(message);
-    return res.status(400).jsend.fail({ statusCode: 400, result: `Invalid or missing values in request body for: ${message}` });
-  }
-
-  next();
-}
-
 module.exports = {
   isAuth,
   isCategoryOwner,
-  validateBody,
+  validateTodoBody,
+  validateLoginBody,
+  validateBodyName,
   validateCategory,
   validateStatus,
   isTodoOwner,
-  handleExpressValidationError,
 };
