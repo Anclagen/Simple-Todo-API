@@ -1,4 +1,4 @@
-var { createDatabase } = require("../models");
+var { createDatabase, db } = require("../models");
 var crypto = require("crypto");
 var testAppFactory = require("../utilities/testAppFactory");
 const request = require("supertest");
@@ -24,21 +24,20 @@ describe("Todo Tests", () => {
   const name = "tester";
   const email = "test@test.com";
   const password = "password";
-  let db = {};
+
   let app;
 
-  // Create a new database for testing
+  // Create a new database for testing needs refactoring of routes to use the test database, as db is imported in routes
   // const options = new Sequelize(
   //   process.env.TEST_DATABASE_NAME || process.env.DATABASE_NAME,
   //   process.env.TEST_ADMIN_USERNAME || process.env.ADMIN_USERNAME,
   //   process.env.TEST_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD,
   //   { host: process.env.TEST_HOST || process.env.HOST, dialect: process.env.DIALECT, logging: false }
   // );
+  // Create a database for testing
+  // const db = createDatabase(options);
 
   beforeAll(async () => {
-    // Create a database for testing
-    const options = new Sequelize(process.env.DATABASE_NAME, process.env.ADMIN_USERNAME, process.env.ADMIN_PASSWORD, { host: process.env.HOST, dialect: process.env.DIALECT, logging: false });
-    db = createDatabase(options);
     // Force true would be better for testing but it would delete all the data in the database if not using a test database
     await db.sequelize.sync({ force: false });
     await createStatuses(db);
