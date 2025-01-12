@@ -44,7 +44,7 @@ npm run start
 npm run test
 ```
 
-- Tests will run on the existing database and should clean up after themselves. Alternatively, you can create a test database.
+- Tests will run on the existing database and should clean up after themselves.
 
 # Environment Variables
 
