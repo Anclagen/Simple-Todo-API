@@ -5,9 +5,3 @@ DATABASE_NAME = "myTodo";
 DIALECT = "mysql";
 PORT = "3000";
 TOKEN_SECRET = "mysecret";
-
-// Optional for testing otherwise tests will use the above values
-TEST_DATABASE_NAME;
-TEST_ADMIN_USERNAME;
-TEST_ADMIN_PASSWORD;
-TEST_HOST;
