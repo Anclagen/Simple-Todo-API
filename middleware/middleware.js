@@ -4,7 +4,6 @@ var CategoryService = require("../services/CategoryService");
 var categoryService = new CategoryService(db);
 var TodoService = require("../services/TodoService");
 var todoService = new TodoService(db);
-const { validationResult } = require("express-validator");
 
 // Middleware function to determine if the API endpoint request is from an authenticated user
 function isAuth(req, res, next) {
