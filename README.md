@@ -1,17 +1,12 @@
-![](http://143.42.108.232/pvt/Noroff-64.png)
-
-# Noroff
-
-## Back-end Development Year 1
-
-### REST API - Course Assignment 1 <sup>V2</sup>
+# Todo API
+A simple MySQL and Express.js todo list api, users can sign in, recieve a JWT, then add categories, todo list items, and update their statuses. 
 
 # Application Installation and Usage Instructions
 
 - Clone the repository
 
 ```bash
-git clone https://github.com/noroff-backend-1/mar24ft-api-ca-1-Anclagen.git
+git clone https://github.com/Anclagen/Simple-Todo-API.git
 ```
 
 - Install the dependencies
